@@ -13,6 +13,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
@@ -98,8 +100,9 @@ Future<void> main() async {
 
 Future<void> _configureLocalTimeZone() async {
   tz.initializeTimeZones();
-  /*final String timeZoneName = await platform.invokeMethod('');
-  tz.setLocalLocation(tz.getLocation(timeZoneName));*/
+  //final String timeZoneName = await platform.invokeMethod('getTimeZoneName');
+  final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(currentTimeZone));
 }
 
 class PaddedRaisedButton extends StatelessWidget {
@@ -1076,7 +1079,8 @@ class _HomePageState extends State<HomePage> {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time);
+        matchDateTimeComponents: DateTimeComponents.time
+    );
   }
 
   Future<void> _scheduleWeeklyTenAMNotification() async {
@@ -1117,13 +1121,16 @@ class _HomePageState extends State<HomePage> {
 
   tz.TZDateTime _nextInstanceOfTenAM() {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate =
-    tz.TZDateTime(tz.local, now.year, now.month, now.day, 18,10);
-    print(scheduledDate.toString());
-    /*if (scheduledDate.isBefore(now)) {
+    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day,19,11);
+    //tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5));
+    //tz.TZDateTime(tz.local, now.year, now.month, now.day,16,22);
+    print(scheduledDate.toString(),);
+
+
+    if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
       print(scheduledDate.toString());
-    }*/
+    }
     return scheduledDate;
   }
 
@@ -1279,7 +1286,7 @@ class _HomePageState extends State<HomePage> {
       'your channel description',
       importance: Importance.max,
       priority: Priority.high,
-      when: DateTime.parse('2020-12-31 17:55:00').microsecondsSinceEpoch-120*1000//DateTime.now().millisecondsSinceEpoch - 120 * 1000,
+      when: DateTime.now().millisecondsSinceEpoch - 120 * 1000,
     );
     final NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);

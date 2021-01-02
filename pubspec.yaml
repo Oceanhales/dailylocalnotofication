@@ -30,6 +30,7 @@ dependencies:
   shared_preferences: ^0.5.7
   rxdart: ^0.24.0
   timezone: ^0.5.9
+  flutter_native_timezone: ^1.0.4
 
 
   # The following adds the Cupertino Icons font to your application.
